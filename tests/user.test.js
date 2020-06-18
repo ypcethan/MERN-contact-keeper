@@ -1,30 +1,22 @@
 const request = require('supertest')
 const app = require('../server')
+const {userOne , setupDatebase , unsavedUser} = require('./fixture/db')
 const User = require('../models/User')
+beforeEach(setupDatebase)
 
-
-const userOne =  {
-    name:'Adam',
-    email:'adam@gmail.com',
-    password:'123123'
-}
-beforeEach(async () => {
-    await User.deleteMany()
+test('Should signup a new user' , async()=>{
+    await request(app)
+        .post('/api/users')
+        .send({
+            name:'EthanChen',
+            email:'erere@gmail.com',
+            password:'123123'
+        })
+        .expect(200)
 })
-// }
-// test('Should signup a new user' , async()=>{
-//     await request(app)
-//         .post('/api/users')
-//         .send({
-//             name:'EthanChen',
-//             email:'erere@gmail.com',
-//             password:'123123'
-//         })
-//         .expect(200)
-// })
 
 test('User model hashs password before save', async () => {
-    const user = new User(userOne).save()
+    const user = new User(unsavedUser).save()
     expect(user.password)
-        .not.toBe(userOne.password)
+        .not.toBe(unsavedUser.password)
 })
