@@ -1,9 +1,8 @@
-const config = require('config')
 const express = require('express')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-
-const { check, validationResult } = require('express-validator/check')
+const JWT_SECRET = process.env.JWT_SECRET
+const { check, validationResult } = require('express-validator')
 const User = require('../models/User')
 
 
@@ -29,12 +28,10 @@ router.post('/', [
             return res.status(400).json({ msg: 'User already exist' })
         }
 
-        const salt = await bcrypt.genSalt(10)
-        const hashedPassword = await bcrypt.hash(password, salt)
         const user = new User({
             name,
             email,
-            password: hashedPassword
+            password
         })
         await user.save()
         const payload = {
@@ -42,7 +39,7 @@ router.post('/', [
                 id: user.id
             }
         }
-        jwt.sign(payload, config.get('jwtSecret'), {
+        jwt.sign(payload,JWT_SECRET, {
             expiresIn: 3600
         }, (err, token) => {
             if (err) throw err

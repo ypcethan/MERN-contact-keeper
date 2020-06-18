@@ -1,12 +1,11 @@
-const config = require('config')
 const express = require('express')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const auth = require('../middleware/auth')
-const { check, validationResult } = require('express-validator/check')
+const { check, validationResult } = require('express-validator')
 const User = require('../models/User')
 
-
+const JWT_SECRET = process.env.JWT_SECRET 
 const router = express.Router()
 
 router.get('/', auth, async (req, res) => {
@@ -30,6 +29,7 @@ router.post('/', [
 
     try {
         const user = await User.findOne({ email })
+        console.log(user)
         if (!user) {
             res.status(400).json({ msg: 'Invalid credentials' })
         }
@@ -44,7 +44,7 @@ router.post('/', [
                 id: user.id
             }
         }
-        jwt.sign(payload, config.get('jwtSecret'), {
+        jwt.sign(payload, JWT_SECRET , {
             expiresIn: 3600
         }, (err, token) => {
             if (err) throw err
