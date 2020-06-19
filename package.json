@@ -7,9 +7,5 @@
   "scripts": {
     "backend": "cd ./backend && yarn dev",
     "frontend": "cd ./frontend && yarn start"
-  },
-  "dependencies": {
-    "react-redux": "^7.2.0",
-    "redux": "^4.0.5"
   }
 }
