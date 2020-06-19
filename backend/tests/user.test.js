@@ -1,16 +1,16 @@
 const request = require('supertest')
 const app = require('../server')
-const {userOne , setupDatebase , unsavedUser} = require('./fixture/db')
+const { setupDatebase, unsavedUser } = require('./fixture/db')
 const User = require('../models/User')
 beforeEach(setupDatebase)
 
-test('Should signup a new user' , async()=>{
+test('Should signup a new user', async () => {
     await request(app)
         .post('/api/users')
         .send({
-            name:'EthanChen',
-            email:'erere@gmail.com',
-            password:'123123'
+            name: 'EthanChen',
+            email: 'erere@gmail.com',
+            password: '123123'
         })
         .expect(200)
 })
