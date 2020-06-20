@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
-
+import { useDispatch } from 'react-redux'
+import { register } from '../../redux/auth/authAction'
 const Register = () => {
+    const dispatch = useDispatch()
     const [user, setUser] = useState({
         name: "",
         email: "",
@@ -15,6 +17,7 @@ const Register = () => {
     const onSubmit = (e) => {
         e.preventDefault()
         console.log("Submit")
+        dispatch(register({ name, email, password }))
     }
     return (
         <div className='form-container'>
@@ -79,4 +82,11 @@ const Register = () => {
     )
 }
 
+
+// const mapDispatchToProps = dispatch => {
+//     return {
+//         register: (formData) => dispatch(register(formData))
+//     }
+// }
+// export default connect(null, mapDispatchToProps)(Register)
 export default Register
