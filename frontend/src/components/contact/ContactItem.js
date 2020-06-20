@@ -1,10 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import { useDispatch } from 'react-redux'
+import { deleteContact, setCurrent, clearCurrent } from '../../redux/contact/contactAction'
 const ContactItem = ({ contact }) => {
 
     const { _id, name, email, phone, type } = contact;
-
+    const dispatch = useDispatch()
+    const onDelete = () => {
+        dispatch(deleteContact(_id))
+        dispatch(clearCurrent())
+    }
+    const onEdit = () => {
+        dispatch(setCurrent(contact))
+    }
     return (
         <div className='card bg-light'>
             <h3 className='text-primary text-left'>
@@ -32,14 +40,14 @@ const ContactItem = ({ contact }) => {
                 )}
             </ul>
             <p>
-                <button
-                    className='btn btn-dark btn-sm'
-                >
+                <button className='btn btn-dark btn-sm'
+                    onClick={onEdit}>
                     Edit
-        </button>
-                <button className='btn btn-danger btn-sm' >
+                </button>
+                <button className='btn btn-danger btn-sm'
+                    onClick={onDelete} >
                     Delete
-        </button>
+                </button>
             </p>
         </div >
     );

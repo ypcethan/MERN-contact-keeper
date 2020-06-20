@@ -1,15 +1,30 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux'
-import { addContact } from '../../redux/contact/contactAction'
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux'
+import { addContact, updateContact, clearCurrent } from '../../redux/contact/contactAction'
+import { v4 as uuidv4 } from 'uuid';
 const ContactForm = () => {
 
     const dispatch = useDispatch()
+    const current = useSelector(state => state.contact.current)
     const [contact, setContact] = useState({
         name: '',
         email: '',
         phone: '',
         type: 'personal'
     });
+    useEffect(() => {
+        if (current !== null) {
+            setContact(current)
+        }
+        else {
+            setContact({
+                name: '',
+                email: '',
+                phone: '',
+                type: 'personal'
+            });
+        }
+    }, [current])
 
     const { name, email, phone, type } = contact;
 
@@ -18,7 +33,13 @@ const ContactForm = () => {
 
     const onSubmit = e => {
         e.preventDefault();
-        dispatch(addContact({ name, email, phone, type }))
+        if (current !== null) {
+            dispatch(updateContact(contact))
+            dispatch(clearCurrent())
+        } else {
+            dispatch(addContact({ name, email, phone, type, _id: uuidv4() }))
+        }
+
         setContact({
             name: '',
             email: '',
@@ -70,7 +91,7 @@ const ContactForm = () => {
             <div>
                 <input
                     type='submit'
-                    value='Add Contact'
+                    value={current ? 'Update Contact' : 'Add Contact'}
                     className='btn btn-primary btn-block'
                 />
             </div>
